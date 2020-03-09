@@ -1,4 +1,3 @@
-import com.cloudbees.hudson.plugins.modeling.*
 
 pipeline {
     agent any
@@ -6,7 +5,7 @@ pipeline {
     stages {
         stage('Build') { 
             steps {
-                sh 'mvn clean deploy' 
+                sh 'hello' 
             }
         }
     }
