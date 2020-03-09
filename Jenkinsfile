@@ -1,3 +1,5 @@
+import com.cloudbees.hudson.plugins.modeling.*
+
 pipeline {
     agent any
     
