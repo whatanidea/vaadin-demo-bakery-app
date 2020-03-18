@@ -10,13 +10,30 @@ jobs:
     steps: 
 
       - checkout 
+
+      - restore_cache: 
+          key: vaadin-demo-bakery-app-{{ checksum "pom.xml" }}
       
       - run: mvn dependency:go-offline
+      
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: vaadin-demo-bakery-app-{{ checksum "pom.xml" }}
 
       - run: mvn com.github.eirslett:frontend-maven-plugin:1.7.6:install-node-and-npm -DnodeVersion="v10.16.0"
       
-      - run: mvn package
+      - run: mvn package -Pproduction
+      
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+          
+      - store_test_results:
+          path: ~/test-results
           
       - store_artifacts:
-          path: /tmp/artifacts 
-            
+          path: ~/test-results/junit 
